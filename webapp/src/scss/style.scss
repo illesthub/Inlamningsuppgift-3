@@ -1,0 +1,23 @@
+// fonts
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+// cores
+@import "./cores/variables";
+@import "./cores/colors";
+@import "./cores/base";
+@import "./cores/buttons";
+
+// components
+@import "./components/ProductCard";
+
+// sections
+@import "./sections/MainMenuSections";
+@import "./sections/ShowcaseSection";
+@import "./sections/ProductGridSection";
+@import "./sections/PamelaSection";
+@import "./sections/DealSection";
+@import "./sections/CustomerSection";
+@import "./sections/FooterSection";
+@import "./sections/BreadcrumbSection";
+@import "./sections/MapSection";
+@import "./sections/ContactFormSection";

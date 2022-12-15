@@ -1,0 +1,80 @@
+.pamela-section {
+    margin-bottom: 3rem;
+    margin-left: 0.5rem;
+
+    .container-fluid {
+        display: flex;
+        justify-content: space-between;
+        width: 1700px;
+        
+        .pamelas-picks {
+            position: relative;
+            display: flex;
+            width: 825px;
+            background-color: #75695C;
+
+            h1 {
+                position: absolute;
+                color: #FFFFFF;
+                right: 40px;
+                top: 90px;
+                font-size: 45px;
+                font-weight: 700;
+                
+                span {
+                    display: block;
+                }
+            }
+
+            .button {
+                position: absolute;
+                right: 10rem;
+                bottom: 7rem;
+                width: 190px;
+                height: 60px;
+                font-weight: 500;
+
+                &:hover {
+                    background-color: $color-theme;
+                }
+            }
+
+        }
+
+        .lets-be-conscious {
+            position: relative;
+            display: flex;
+            width: 825px;
+            background-color: #D9D9D9;
+
+            img {
+                position: absolute;
+                right: 0;
+            }
+
+            h1 {
+                position: absolute;
+                color: $color-dark;
+                left: 40px;
+                top: 90px;
+                font-size: 45px;
+                font-weight: 700;
+                
+                span {
+                    display: block;
+                }
+            }
+
+            .button {
+                position: absolute;
+                left: 3rem;
+                bottom: 7rem;
+                width: 190px;
+                height: 60px;
+                font-weight: 500;
+                background-color: #FFFFFF;
+                color: $color-dark !important;
+            }
+        }
+    }
+}
