@@ -8,7 +8,6 @@ controller.param('id', (req, res, next, id) => {
     next()
 })
 
-const poop = poop
 
 // POST / Create product
 controller.post('/', (req, res) => {
