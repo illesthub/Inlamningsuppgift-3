@@ -10,14 +10,22 @@ import { ProductContextType, useProductContext } from '../contexts/contexts'
 
 const Home: React.FC = () => {
 
-  const {featured, products, getFeatured, getAll} = useProductContext() as ProductContextType
+  const {featured, cheapDeals, expensiveDeals, getFeatured, getCheapDeals, getExpensiveDeals, getAll} = useProductContext() as ProductContextType
 
   useEffect(() => {
     getFeatured(8)
   }, [])
 
   useEffect(() => {
-    getAll(6)
+    getCheapDeals(6)
+  }, [])
+
+  useEffect(() => {
+    getExpensiveDeals(6)
+  }, [])
+
+  useEffect(() => {
+    getAll()
   }, [])
 
 
@@ -29,7 +37,7 @@ const Home: React.FC = () => {
       <ShowcaseSection />
       <ProductGridSection title="Featured Products" items={featured} />
       <PamelaSection />
-      <DealSection title="Product Deals" items={products} />
+      <DealSection title="Product Deals" items={cheapDeals} />
       <CustomerSection />
       <FooterSection />
     </>

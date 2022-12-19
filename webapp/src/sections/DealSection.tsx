@@ -26,14 +26,14 @@ const DealSection: React.FC<ProductDetailsType> = ({title, items = []}) => {
             </div>
             <div className='grid row row-cols-1 row-cols-md-2 g-2'>
                 {
-                  items.map( product => <ProductCard key={product.articleNumber} item={product} />)
+                  items.map( product => <ProductCard key={product.tag} item={product} />)
                 }
             </div>
         </div>
         <div className='container-fluid-reverse'>           
             <div className='grid row row-cols-1 row-cols-md-2 g-2'>
                 {
-                  items.map( product => <ProductCard key={product.articleNumber} item={product} />)
+                  items.map( product => <ProductCard key={product.tag} item={product} />)
                 }
             </div>
             <div className='two-for-one'>

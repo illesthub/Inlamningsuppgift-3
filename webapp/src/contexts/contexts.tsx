@@ -11,50 +11,72 @@ export interface ProductContextType {
     product: ProductItem
     products : ProductItem[]
     featured: ProductItem[]
+    cheapDeals: ProductItem[]
+    expensiveDeals: ProductItem[]
     get: (articleNumber?: string) => void
-    getAll: (take?: number) => void
+    getAll: () => void
     getFeatured: (take?: number) => void
+    getCheapDeals: (take?: number) => void
+    getExpensiveDeals: (take?: number) => void
 }
 
 export const ProductContext = createContext<ProductContextType | null>(null)
 export const useProductContext = () => { return useContext(ProductContext)}
 
     const ProductProvider: React.FC<ProductProviderType> = ({children}) => {
-    const baseUrl:string = 'https://win22-webapi.azurewebsites.net/api/products'
-    const empty_products: ProductItem = { articleNumber : 0 , name: '' , category: '' , price: 0 , imageName: ''}
+    const baseUrl:string = 'http://localhost:5000/api/products'
+    const empty_products: ProductItem = { id: 0, tag: '', articleNumber: 0, name: '', description: '', category: '', price: 0, rating: 0, imageName: ''}
 
     const [product, setProduct] = useState<ProductItem>(empty_products)
     const [products, setProducts] = useState<ProductItem[]>([])
     const [featured, setFeatured] = useState<ProductItem[]>([])
+    const [cheapDeals, setCheapDeals] = useState<ProductItem[]>([])
+    const [expensiveDeals, setExpensiveDeals] = useState<ProductItem[]>([])
 
     const get = async (articleNumber?: string) => {
         if (articleNumber !== undefined) {
-            const res: any = await fetch(baseUrl + `/${articleNumber}`)
+            const res: any = await fetch(baseUrl + `/details/${articleNumber}`)
             setProduct(await res.json())
         }
     }
 
-    const getAll = async (take: number = 0) => {
-        let url = baseUrl
-
-        if (take !== 0)
-            url = baseUrl + `?take=${take}`
-        const res = await fetch(url)
+    const getAll = async () => {
+        const res = await fetch(baseUrl)
         setProducts(await res.json())
     }
 
     const getFeatured = async (take: number = 0) => {
-        let url = baseUrl + `?tag=featured`
+        let url = `${baseUrl}/featured`
 
         if (take !== 0)
-            url += `&take=${take}`
+            url += `/${take}`
 
         const res = await fetch(url)
         setFeatured(await res.json())
     }
 
+    const getCheapDeals = async (take: number = 0) => {
+        let url = `${baseUrl}/cheapDeals`
 
-    return <ProductContext.Provider value={{product, products, featured, getFeatured, get, getAll }}>
+        if (take !== 0)
+            url += `/${take}`
+
+        const res = await fetch(url)
+        setCheapDeals(await res.json())
+    }
+
+    const getExpensiveDeals = async (take: number = 0) => {
+        let url = `${baseUrl}/expensiveDeals`
+
+        if (take !== 0)
+            url += `/${take}`
+
+        const res = await fetch(url)
+        setExpensiveDeals(await res.json())
+    }
+
+
+    return <ProductContext.Provider value={{product, products, featured, cheapDeals, expensiveDeals, getExpensiveDeals, getCheapDeals, getFeatured, get, getAll }}>
         {children}
     </ProductContext.Provider>
 }
