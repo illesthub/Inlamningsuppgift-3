@@ -1,6 +1,6 @@
 const express = require('express');
 const controller = express.Router();
-let products = require('../data/simulated_database');
+const ProductSchema = require('../schemas/productSchema');
 
 // Middleware
 controller.param('id', (req, res, next, id) => {
@@ -8,7 +8,7 @@ controller.param('id', (req, res, next, id) => {
     next()
 })
 
-controller.param("tag", (req, res, next, tag) => {
+controller.param('tag', (req, res, next, tag) => {
     req.products = products.filter(p => p.tag == tag)
     next()
 })
@@ -32,29 +32,88 @@ controller.post('/', (req, res) => {
 })
 
 // GET / Get all products                     
-controller.get('/', (req, res) => {
-    res.status(200).json(products)
+controller.route('/').get(async (req, res) => {
+    const products = []
+    const tagList = await ProductSchema.find()
+    if (tagList) {
+        for (let product of tagList) {
+            products.push({
+                articleNumber: product._id,
+                name: product.name,
+                description: product.description,
+                price: product.price,
+                category: product.category,
+                tag: product.tag,
+                imageName: product.imageName,
+                rating: product.rating
+            })
+        }
+        res.status(200).json(products)
+    }
+    else 
+        res.status(400).json()
 })
 
 // GET / Get products of a certain tag
-controller.route('/:tag/:take').get((req, res) =>{
-    let tagList = []
-    for (let i = 0; i < Number(req.params.take); i++)
-    tagList.push(req.products[i])
-
-    res.status(200).json(tagList)
+controller.route('/:tag').get(async (req, res) => {
+    const products = []
+    const tagList = await ProductSchema.find({tag: req.params.tag})
+    if (tagList) {
+        for (let product of tagList) {
+            products.push({
+                articleNumber: product._id,
+                name: product.name,
+                description: product.description,
+                price: product.price,
+                category: product.category,
+                tag: product.tag,
+                imageName: product.imageName,
+                rating: product.rating
+            })
+        }
+        res.status(200).json(products)
+    }
+    else 
+        res.status(400).json()
 })
 
-controller.route('/:tag').get((req, res) => {
-    if (req.products != undefined)
-        res.status(200).json(req.products)
-    else res.status(404).json()
+controller.route('/:tag/:take').get(async (req, res) =>{
+    const products = []
+    const tagList = await ProductSchema.find({tag: req.params.tag}).limit(req.params.take)
+    if (tagList) {
+        for (let product of tagList) {
+            products.push({
+                articleNumber: product._id,
+                name: product.name,
+                description: product.description,
+                price: product.price,
+                category: product.category,
+                tag: product.tag,
+                imageName: product.imageName,
+                rating: product.rating
+            })
+        }
+        res.status(200).json(products)
+    }
+    else 
+        res.status(400).json()
 })
 
 // GET / Get a single product using article number
-controller.route('/details/:articleNumber').get((req, res) => {
-    if (req.product != undefined)
-        res.status(200).json(req.product)
+controller.route('/product/details/:articleNumber').get(async (req, res) => {
+    const product = await ProductSchema.findById(req.params.articleNumber)
+    if (product) {
+        res.status(200).json({
+            articleNumber: product._id,
+            name: product.name,
+            description: product.description,
+            price: product.price,
+            category: product.category,
+            tag: product.tag,
+            imageName: product.imageName,
+            rating: product.rating
+        })
+    }
     else
         res.status(404).json()
 })

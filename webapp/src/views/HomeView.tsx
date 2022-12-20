@@ -37,7 +37,7 @@ const Home: React.FC = () => {
       <ShowcaseSection />
       <ProductGridSection title="Featured Products" items={featured} />
       <PamelaSection />
-      <DealSection title="Product Deals" items={cheapDeals} />
+      <DealSection title="Product Deals" items={cheapDeals, expensiveDeals} />
       <CustomerSection />
       <FooterSection />
     </>
