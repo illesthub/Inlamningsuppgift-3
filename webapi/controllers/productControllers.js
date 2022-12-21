@@ -3,32 +3,45 @@ const controller = express.Router();
 const ProductSchema = require('../schemas/productSchema');
 
 // Middleware
-controller.param('id', (req, res, next, id) => {
-    req.product = products.find(product => product.id == id)
-    next()
-})
+// controller.param('id', (req, res, next, id) => {
+//     req.product = products.find(product => product.id == id)
+//     next()
+// })
 
-controller.param('tag', (req, res, next, tag) => {
-    req.products = products.filter(p => p.tag == tag)
-    next()
-})
+// controller.param('tag', (req, res, next, tag) => {
+//     req.products = products.filter(x => x.tag == tag)
+//     next()
+// })
 
-controller.param('articleNumber', (req, res) => {
-    req.product = products.find(p => p.articleNumber == articleNumber)
-    next()
-})
+// controller.param('articleNumber', (req, res) => {
+//     req.product = products.find(p => p.articleNumber == articleNumber)
+//     next()
+// })
 
 // POST / Create product              
-controller.post('/', (req, res) => {
-    let product = {
-        id: (products[products.length -1])?.id > 0 ? (products[products.length -1])?.id +1 : 1,
-        articleNumber: req.body.articleNumber,
-        name: req.body.name,
-        price: req.body.price
-    }
+controller.route('/').post(async (req, res) => {
+    const {name, description, price, category, tag, imageName, rating} = req.body
+    if (!name || !price)
+        res.status(400).json({text: 'Creating a product requires a name and a price'})
 
-    products.push(product)
-    res.status(201).json(product)
+    const item_exists = await ProductSchema.findOne({name})
+    if (item_exists)
+        res.status(409).json({text: 'A product with that name already exists'})
+    else {
+        const product = await ProductSchema.create({
+            name,
+            description,
+            price,
+            category,
+            tag,
+            imageName,
+            rating
+        })
+    }
+    if (product)
+        res.status(201).json({text: `A product with article number ${_id} has been created`})
+    else
+        res.status(400).json({text: 'Something went wrong'})
 })
 
 // GET / Get all products                     
@@ -99,7 +112,7 @@ controller.route('/:tag/:take').get(async (req, res) =>{
         res.status(400).json()
 })
 
-// GET / Get a single product using article number
+// GET / Get a single product
 controller.route('/product/details/:articleNumber').get(async (req, res) => {
     const product = await ProductSchema.findById(req.params.articleNumber)
     if (product) {
@@ -118,35 +131,44 @@ controller.route('/product/details/:articleNumber').get(async (req, res) => {
         res.status(404).json()
 })
 
-// GET / Get a single product using ID          
-controller.get('/:id', (req, res) => {
-    if (req.product != undefined)
-    res.status(200).json(req.product)
-    else res.status(404).json()
-})
-
-// PUT / Update product using ID                     
-controller.put('/:id', (req, res) => {
-    if (req.product != undefined) {
-        products.forEach (product => {
-            if (product.id == req.product.id) {
-                product.articleNumber = req.body.articleNumber;
-                product.name = req.body.name;
-                product.price = req.body.price;
-            }
+// PUT / Update a product                    
+controller.route('/:articleNumber').put(async (req, res) => {
+    if (!req.params.articleNumber)
+        res.status(400).json('An article number is required')
+    else {
+        const product = await ProductSchema.findById(req.params.articleNumber)
+    if (product) {        
+        product = await ProductSchema.updateMany({
+            name: product.name,
+            description: product.description,
+            price: product.price,
+            category: product.category,
+            tag: product.tag,
+            imageName: product.imageName,
+            rating: product.rating
         })
-        res.status(200).json(req.product)
+        res.status(200).json({text: `The product with article number ${req.params.articleNumber} has been updated`})
     }
-    else res.status(404).json()
+    else {
+        res.status(404).json({text: `No product with article number ${req.params.articleNumber} was found`})
+    }
+}
 })
 
-// DELETE / Delete product using ID                   
-controller.delete('/:id', (req, res) => {
-    if (req.product != undefined) {
-        products = products.filter(product => product.id !== req.product.id)
-        res.status(204).json()
+// DELETE / Delete a product                  
+controller.route('/:id').delete(async (req, res) => {
+    if (!req.params.articleNumber)
+        res.status(400).json('An article number is required')
+    else {
+        const item = await ProductSchema.findById(req.params.articleNumber)
+        if (item) {
+            await ProductSchema.remove(item)
+            res.status(200).json({text: `The product with article number ${req.params.articleNumber} was successfully deleted`})
+        }
+        else {
+            res.status(404).json({text: `No product with article number ${req.params.articleNumber} was found`})
+        }
     }
-    else res.status(404).json()
 })
 
 module.exports = controller
