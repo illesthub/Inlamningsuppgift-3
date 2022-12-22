@@ -9,25 +9,11 @@ import FooterSection from '../sections/FooterSection'
 import { ProductContextType, useProductContext } from '../contexts/contexts'
 
 const Home: React.FC = () => {
-
-  const {featured, cheapDeals, expensiveDeals, getFeatured, getCheapDeals, getExpensiveDeals, getAll} = useProductContext() as ProductContextType
+  const { featured, getFeatured } = useProductContext() as ProductContextType
 
   useEffect(() => {
     getFeatured(8)
   }, [])
-
-  useEffect(() => {
-    getCheapDeals(6)
-  }, [])
-
-  useEffect(() => {
-    getExpensiveDeals(6)
-  }, [])
-
-  useEffect(() => {
-    getAll()
-  }, [])
-
 
   window.parent.document.title = 'Fixxo.'
 
@@ -37,11 +23,10 @@ const Home: React.FC = () => {
       <ShowcaseSection />
       <ProductGridSection title="Featured Products" items={featured} />
       <PamelaSection />
-      <DealSection title="Product Deals" items={cheapDeals, expensiveDeals} />
+      <DealSection /> 
       <CustomerSection />
       <FooterSection />
     </>
-
   )
 }
 

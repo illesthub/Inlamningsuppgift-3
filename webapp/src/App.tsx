@@ -1,5 +1,4 @@
 import './style.min.css';
-import React, {useEffect, useState} from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import HomeView from './views/HomeView';
 import CategoriesView from './views/CategoriesView';
@@ -11,34 +10,12 @@ import CompareView from './views/CompareView';
 import WishListView from './views/WishListView';
 import ShoppingCartView from './views/ShoppingCartView';
 import NotFoundView from './views/NotFoundView';
-import ProductContext, { ProductContextType, useProductContext } from './contexts/contexts';
+import ProductContext from './contexts/contexts';
 
 function App() {
 
-  const [products, setProducts] = useState({
-    all: [],
-    featuredProducts: [],
-    dealProducts: []
-  })
-
-  useEffect(() => {
-
-    const fetchAllProducts = async () => {
-      let result = await fetch('https://win22-webapi.azurewebsites.net/api/products')
-      setProducts({...products, all: await result.json()})
-    }
-    fetchAllProducts()
-
-    const fetchFeaturedProducts = async () => {
-      let result = await fetch('https://win22-webapi.azurewebsites.net/api/products?take=8')
-      setProducts({...products, featuredProducts: await result.json()})
-    }
-    fetchFeaturedProducts()
-
-  }, [setProducts])
-
   return (
-    <BrowserRouter> 
+    <BrowserRouter>
       <ProductContext>
         <Routes>
           <Route path='/' element={<HomeView />} />

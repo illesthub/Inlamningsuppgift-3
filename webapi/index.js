@@ -8,7 +8,7 @@ const app = express();
 
 //Middleware
 app.use(cors());
-app.use(express.urlencoded({ extended: true}));
+app.use(express.urlencoded({ extended: false}));
 app.use(bodyParser.json());
 
 //Routes

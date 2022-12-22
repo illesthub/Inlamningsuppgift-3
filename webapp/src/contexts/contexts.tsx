@@ -9,7 +9,7 @@ interface ProductProviderType {
 
 export interface ProductContextType {
     product: ProductItem
-    products : ProductItem[]
+    products: ProductItem[]
     featured: ProductItem[]
     cheapDeals: ProductItem[]
     expensiveDeals: ProductItem[]
@@ -21,11 +21,11 @@ export interface ProductContextType {
 }
 
 export const ProductContext = createContext<ProductContextType | null>(null)
-export const useProductContext = () => { return useContext(ProductContext)}
+export const useProductContext = () => { return useContext(ProductContext) }
 
-    const ProductProvider: React.FC<ProductProviderType> = ({children}) => {
-    const baseUrl:string = 'http://localhost:5000/api/products'
-    const empty_products: ProductItem = { id: 0, tag: '', articleNumber: 0, name: '', description: '', category: '', price: 0, rating: 0, imageName: ''}
+const ProductProvider: React.FC<ProductProviderType> = ({ children }) => {
+    const baseUrl: string = 'http://localhost:5000/api/products'
+    const empty_products: ProductItem = { tag: '', articleNumber: 0, name: '', description: '', category: '', price: 0, rating: 0, imageName: '' }
 
     const [product, setProduct] = useState<ProductItem>(empty_products)
     const [products, setProducts] = useState<ProductItem[]>([])
@@ -76,7 +76,7 @@ export const useProductContext = () => { return useContext(ProductContext)}
     }
 
 
-    return <ProductContext.Provider value={{product, products, featured, cheapDeals, expensiveDeals, getExpensiveDeals, getCheapDeals, getFeatured, get, getAll }}>
+    return <ProductContext.Provider value={{ product, products, featured, cheapDeals, expensiveDeals, getExpensiveDeals, getCheapDeals, getFeatured, get, getAll }}>
         {children}
     </ProductContext.Provider>
 }
