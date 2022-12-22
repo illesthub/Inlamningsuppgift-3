@@ -113,7 +113,7 @@ controller.route('/product/details/:articleNumber').get(async (req, res) => {
         })
     }
     else
-        res.status(404).json()
+        res.status(404).json({text: "Product not found"})
 })
 
 // PUT / Update a product                 
@@ -139,15 +139,15 @@ controller.route('/:articleNumber').delete(async (req, res) => {
     if (!req.params.articleNumber)
         res.status(400).json('An article number is required')
     else {
-        const item = await ProductSchema.findById(req.params.articleNumber)
-        if (item) {
-            await ProductSchema.remove(item)
-            res.status(200).json({ text: `The product with article number ${req.params.articleNumber} was successfully deleted` })
+        const removed = await ProductSchema.findByIdAndRemove(req.params.articleNumber)
+        if (removed) {
+            res.status(200).json({ text: `The product with article number ${req.params.articleNumber} successfully deleted` })
         }
         else {
             res.status(404).json({ text: `No product with article number ${req.params.articleNumber} was found` })
         }
     }
 })
+
 
 module.exports = controller
